@@ -162,7 +162,7 @@ export default {
 
 <style>
 .theme--light.v-banner .v-banner__wrapper {
-    border-bottom: unset;
+    border-bottom: unset!important;
 }
 .v-banner__wrapper {
     padding-left: 16px!important;
