@@ -20,7 +20,7 @@
             />
             <v-spacer></v-spacer>
         </v-app-bar>
-        <transition name="scroll-y-reverse-transition">
+        <transition name="fade-transition">
         <v-list 
             two-line
             v-if="loading === false && data !== false"
