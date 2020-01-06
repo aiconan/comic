@@ -20,7 +20,7 @@
             />
             <v-spacer></v-spacer>
         </v-app-bar>
-        <transition name="fade-transition">
+        <transition-group name="fade-transition">
         <v-list 
             two-line
             v-if="loading === false && data !== false"
@@ -45,7 +45,7 @@
                 </v-list-item>
             </template>
         </v-list>
-        </transition>
+        </transition-group>
 	</div>
 </template>
 
@@ -59,17 +59,6 @@ export default {
         query: '',
         data: false
     }),
-
-    watch: {
-        '$route' (to, from) {
-            this.query = to.params.query || '';
-            if(!this.query) {
-                this.data = false;
-            } else {
-                this.search(this.query);
-            }
-        }
-    },
 
     mounted: function(){
         this.query = this.$route.params.query || '';
