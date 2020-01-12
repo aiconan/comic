@@ -73,7 +73,7 @@
                     :src="data.cover_list[0].replace('http://','https://')"
                     class="mt-2 mb-2 ml-2"
                     max-width="120"
-                    max-height="200"
+                    min-height="160"
                 >
                     <template v-slot:placeholder>
                         <v-row

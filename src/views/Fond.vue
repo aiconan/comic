@@ -33,7 +33,7 @@
                             align="center"
                             justify="center"
                         >
-                            <v-progress-circular indeterminate color="light-blue darken-1">
+                            <v-progress-circular indeterminate color="white darken-1">
                             </v-progress-circular>
                         </v-row>
                     </template>

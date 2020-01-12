@@ -59,7 +59,7 @@
         </div>
         <div 
             v-if="loading === false"
-            class="tool mt-2 mb-2"
+            class="tool mt-2 mb-10"
             style="text-align: center"
         >
             <v-btn 
