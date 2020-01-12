@@ -23,6 +23,14 @@ const routes = [
     component: () => import('../views/Search.vue')
   },
   {
+    path: '/fond',
+    name: 'fond',
+    meta: {
+      title: '收藏' + title
+    },
+    component: () => import('../views/Fond.vue')
+  },
+  {
     path: '/detail/:id?',
     name: 'detail',
     meta: {
@@ -48,7 +56,7 @@ const routes = [
   },
   {
     path: '/',
-    redirect: '/search'
+    redirect: '/home'
   }
 ]
 

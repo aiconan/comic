@@ -22,5 +22,14 @@ export default Vue.extend({
   data: () => ({
     transitionName: 'fade-transition',
   }),
+
+  mounted: function(){
+    if(!window.localStorage.like){
+      window.localStorage.like = window.JSON.stringify([]);
+    }
+    if(!window.localStorage.history){
+      window.localStorage.history = window.JSON.stringify([]);
+    }
+  }
 });
 </script>

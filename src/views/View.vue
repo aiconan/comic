@@ -58,6 +58,7 @@
             </v-menu>
         </div>
         <div 
+            v-if="loading === false"
             class="tool mt-2 mb-2"
             style="text-align: center"
         >
@@ -68,7 +69,14 @@
                 style="float: left"
                 key="loadlast"
                 :disabled="Number(chapter_index) === data.comic_chapter.length"
-                @click="$router.push({path: `/view/${comic_id}/${Number(chapter_index)+1}`})"
+                @click="$router.push({
+                    name: 'view',
+                    params: {
+                        data: data,
+                        comic_id: comic_id,
+                        chapter_index: Number(chapter_index)+1
+                    }
+                })"
             >
                 <v-icon left>keyboard_arrow_left</v-icon> 上一话
             </v-btn>
@@ -76,7 +84,13 @@
                 outlined
                 color="primary"
                 key="loadcont"
-                @click="$router.push({path: `/detail/${comic_id}`})"
+                @click="$router.push({
+                    name: 'detail',
+                    params: {
+                        data: data,
+                        id: comic_id
+                    }
+                })"
             >
                 目录
             </v-btn>
@@ -87,7 +101,14 @@
                 style="float: right"
                 key="loadnext"
                 :disabled="Number(chapter_index) === 0"
-                @click="$router.push({path: `/view/${comic_id}/${Number(chapter_index)-1}`})"
+                @click="$router.push({
+                    name: 'view',
+                    params: {
+                        data: data,
+                        comic_id: comic_id,
+                        chapter_index: Number(chapter_index)-1
+                    }
+                })"
             >
                 下一话 <v-icon right>keyboard_arrow_right</v-icon>
             </v-btn>
@@ -109,10 +130,13 @@ export default {
 
     watch: {
         '$route' (to, from) {
+            this.data = to.params.data || false;
             this.comic_id = to.params.comic_id || false;
             this.chapter_index = to.params.chapter_index || false;
-            if(!this.comic_id || !this.chapter_index) {
+            if(!this.comic_id) {
                 this.$router.go(-1);
+            } else if(this.data) {
+                this.load(this.data);
             } else {
                 this.view(this.comic_id, this.chapter_index);
             }
@@ -122,26 +146,29 @@ export default {
     mounted: function(){
         this.comic_id = this.$route.params.comic_id;
         this.chapter_index = this.$route.params.chapter_index;
-        this.view(this.comic_id, this.chapter_index);
-        document.documentElement.scrollTop = 0;
+        if(this.$route.params.data){
+            this.load(this.$route.params.data);
+        }else{
+            this.view(this.comic_id, this.chapter_index);
+        }
     },
 
     methods: {
         view: function(comic_id, chapter_index){
-            if(!this.comic_id || !this.chapter_index) {
-                this.$router.go(-1);
-            }  
             this.loading = true;
             this.$axios.get(this.api, {
                 params: {
                     'comic_id': comic_id
                 }
             }).then(response => {
-                this.data = response.data.data;
-                this.$router.push({path: `/view/${comic_id}/${chapter_index}`});
-                this.loading = false;
-
+                this.load(response.data.data);
             })
+        },
+        load: function(msg){
+            this.data = msg;
+            this.$router.push({path: `/view/${this.comic_id}/${this.chapter_index}`});
+            this.loading = false;
+            document.documentElement.scrollTop = 0;
         },
         download: function(url){
             window.open(url);

@@ -7,9 +7,9 @@
         >
             <v-btn 
                 icon
-                @click="$router.go(-1)"
+                @click="$router.push({path: `/home`})"
             >
-                <v-icon>arrow_back</v-icon>
+                <v-icon>home</v-icon>
             </v-btn>
             <input 
                 ref="input" 
@@ -31,9 +31,17 @@
                     v-ripple="{ class: `blue--text` }" 
                     v-for="item in data" 
                     :key="item.comic_id"
-                    @click="$router.push({path: `/detail/${item.comic_id}`})"
                 >
-                    <v-list-item-content>
+                    <v-list-item-avatar
+                        @click="look(item.comic_id, item.comic_name, item.cartoon_author_list_name)"
+                    >
+                        <v-icon>
+                            {{ history_now ? 'history' : 'open_in_new' }}
+                        </v-icon>
+                    </v-list-item-avatar>
+                    <v-list-item-content
+                        @click="look(item.comic_id, item.comic_name, item.cartoon_author_list_name)"
+                    >
                         <v-list-item-title 
                             v-text="item.comic_name"
                         >
@@ -42,6 +50,16 @@
                             <span v-text="item.cartoon_author_list_name"></span>
                         </v-list-item-subtitle>
                     </v-list-item-content>
+                    <v-list-item-action 
+                        v-if="history_now"
+                    >
+                        <v-btn 
+                            icon
+                            @click="del_history(item.comic_id)"
+                        >
+                            <v-icon>delete</v-icon>
+                        </v-btn>
+                    </v-list-item-action>
                 </v-list-item>
             </template>
         </v-list>
@@ -56,23 +74,29 @@ export default {
 	data: () => ({
         api: 'https://m.kanman.com/api/serachcomic/',
         loading: false,
-        query: '',
-        data: false
+        query: false,
+        data: false,
+        history: false,
+        history_now : true
     }),
 
     mounted: function(){
-        this.query = this.$route.params.query || '';
+        this.query = this.$route.params.query || null;
+        this.history = window.JSON.parse(window.localStorage.history);
         this.search(this.query);
     },
 
     methods: {
         search: function(query){
+            this.loading = true;
             if(!query){
-                this.data = false; 
+                this.data = this.history; 
+                this.history_now = true;
                 this.$router.push({path: `/search/`});
+                setTimeout(()=>{this.loading = false},100);
                 return false;
             }
-            this.loading = true;
+            this.data = false;
             this.$axios.get(this.api, {
                 params: {
                     'serachKey': query
@@ -80,8 +104,32 @@ export default {
             }).then(response => {
                 this.data = response.data.data;
                 this.$router.push({path: `/search/${this.query}`});
-                this.loading = false;
+                this.history_now = false;
+                setTimeout(()=>{this.loading = false},100);
             })
+        },
+        look: function(id, name, author){
+            var _l = window.JSON.parse(window.localStorage.history);
+            var _d = {comic_id: id, comic_name: name, cartoon_author_list_name: author};
+            _l.forEach(function(item, index, arr) {
+                if(item.comic_id == _d.comic_id) {
+                    _l.splice(index, 1);
+                }
+            });
+            _l.push(_d);
+            window.localStorage.history = window.JSON.stringify(_l);
+            this.$router.push({path: `/detail/${id}`});
+        },
+        del_history: function(id){
+            var _l = window.JSON.parse(window.localStorage.history);
+            _l.forEach(function(item, index, arr) {
+                if(item.comic_id == id) {
+                    _l.splice(index, 1);
+                }
+            });
+            window.localStorage.history = window.JSON.stringify(_l);
+            this.history = window.JSON.parse(window.localStorage.history);
+            this.data = this.history;
         }
     }
 }
