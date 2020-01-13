@@ -4,7 +4,6 @@
             app
             color="primary"
             dark
-            hide-on-scroll
         >
             <v-btn 
                 icon

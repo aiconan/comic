@@ -153,17 +153,20 @@ export default {
         }, 400);
         this.id = this.$route.params.id || false;
         this.data = this.$route.params.data || false;
+        // Fond Start
         var _l = window.JSON.parse(window.localStorage.like);
         var _id = this.id;
         var _f = false;
-        _l.forEach(function(item, index, arr) {
-            if(item.id == _id) {
+        for(var i=0;i<_l.length;i++) {
+            if(_l[i].id == _id) {
                 _f = true;
+                break;
             }else{
                 _f = false;
             }
-        });
+        }
         this.fond = _f;
+        // Fond End
         if(this.data){
             this.load(this.data);
         } else {
