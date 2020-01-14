@@ -132,7 +132,7 @@ export default {
         '$route' (to, from) {
             this.data = to.params.data || false;
             this.comic_id = to.params.comic_id || false;
-            this.chapter_index = to.params.chapter_index || false;
+            this.chapter_index = to.params.chapter_index || 0;
             if(!this.comic_id) {
                 this.$router.go(-1);
             } else if(this.data) {

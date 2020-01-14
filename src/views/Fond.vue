@@ -15,16 +15,19 @@
             <v-toolbar-title>收藏</v-toolbar-title>
         </v-app-bar>
         <v-container fluid>
-            <v-card 
+            <v-expand-transition
                 v-for="(item, index) in data"
                 :key="index"
+            >
+            <v-card 
+                v-show="item.show"
                 class="mb-2"
             >
                 <v-img
                     :src="'https://image.mhxk.com/mh/$$_2_1.jpg-800x400.jpg.webp'.replace('$$',item.id)"
-                    class="white--text align-end"
                     gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                    height="180px"
+                    class="white--text align-end"
+                    aspect-ratio="2"
                 >
                     <template v-slot:placeholder>
                         <v-row
@@ -49,12 +52,13 @@
                     <v-spacer></v-spacer>
                     <v-btn 
                         icon
-                        @click="del(item.id)"
+                        @click="item.show=false;del(item.id)"
                     >
                         <v-icon>delete</v-icon>
                     </v-btn>
                 </v-card-actions>
             </v-card>
+            </v-expand-transition>
         </v-container>
 	</div>
 </template>
@@ -84,7 +88,6 @@ export default {
                 }
             });
             window.localStorage.like = window.JSON.stringify(_l);
-            this.data = window.JSON.parse(window.localStorage.like);
         }
     }
 }

@@ -26,11 +26,14 @@
             v-if="loading === false && data !== false"
             key="result"
         >
-            <template>
-                <v-list-item 
-                    v-ripple="{ class: `blue--text` }" 
-                    v-for="item in data" 
+                <transition
+                    name="scale-transition"
+                    v-for="item in data"
                     :key="item.comic_id"
+                >
+                <v-list-item 
+                    v-if="item.show"
+                    v-ripple="{ class: `blue--text` }" 
                 >
                     <v-list-item-avatar
                         @click="look(item.comic_id, item.comic_name, item.cartoon_author_list_name)"
@@ -55,13 +58,13 @@
                     >
                         <v-btn 
                             icon
-                            @click="del_history(item.comic_id)"
+                            @click="item.show=false;del_history(item.comic_id)"
                         >
                             <v-icon>delete</v-icon>
                         </v-btn>
                     </v-list-item-action>
                 </v-list-item>
-            </template>
+                </transition>
         </v-list>
         </transition-group>
 	</div>
@@ -102,7 +105,12 @@ export default {
                     'serachKey': query
                 }
             }).then(response => {
-                this.data = response.data.data;
+                var _d = response.data.data;
+                var i = 0;
+                for(i=0;i<_d.length;i++) {
+                    _d[i].show = true;
+                }
+                this.data = _d;
                 this.$router.push({path: `/search/${this.query}`});
                 this.history_now = false;
                 setTimeout(()=>{this.loading = false},100);
@@ -110,7 +118,7 @@ export default {
         },
         look: function(id, name, author){
             var _l = window.JSON.parse(window.localStorage.history);
-            var _d = {comic_id: id, comic_name: name, cartoon_author_list_name: author};
+            var _d = {show: true, comic_id: id, comic_name: name, cartoon_author_list_name: author};
             _l.forEach(function(item, index, arr) {
                 if(item.comic_id == _d.comic_id) {
                     _l.splice(index, 1);
@@ -128,8 +136,8 @@ export default {
                 }
             });
             window.localStorage.history = window.JSON.stringify(_l);
-            this.history = window.JSON.parse(window.localStorage.history);
-            this.data = this.history;
+            //this.history = window.JSON.parse(window.localStorage.history);
+            //this.data = this.history;
         }
     }
 }

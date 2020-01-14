@@ -198,7 +198,7 @@ export default {
         },
         like: function(){
             var _l = window.JSON.parse(window.localStorage.like);
-            var _d = {id: this.id, name: this.data.comic_name, author: this.data.comic_author, media: this.data.comic_media};
+            var _d = {show: true, id: this.id, name: this.data.comic_name, author: this.data.comic_author, media: this.data.comic_media};
             if(this.fond === true){
                 var _id = this.id;
                 _l.forEach(function(item, index, arr) {

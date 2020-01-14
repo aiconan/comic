@@ -33,3 +33,9 @@ export default Vue.extend({
   }
 });
 </script>
+
+<style>
+.fill-height {
+  height: 100%;
+}
+</style>
