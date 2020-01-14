@@ -63,7 +63,9 @@
                     <v-card>
                         <v-card-title class="headline">提示</v-card-title>
                         <v-card-text>
-                            您确定要删除<strong>搜索历史</strong>与<strong>收藏</strong>吗？<br/>请注意，该操作是不可逆的。
+                            您确认要删除<strong>搜索历史</strong>与<strong>收藏</strong>吗？
+                            <br/>
+                            请注意，该操作是不可逆的。
                         </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
@@ -82,7 +84,8 @@
                                     :disabled="del_disabled"
                                     @click="del()"
                                 >
-                                    {{ del_state }}
+                                    <div v-if="!del_disabled">确认</div>
+                                    <v-icon v-else>check</v-icon>
                                 </v-btn>
                             </v-card-actions>
                     </v-card>
@@ -98,7 +101,6 @@ export default {
 
 	data: () => ({
         show: false,
-        del_state: '确认',
         del_loading: false,
         del_disabled: false,
         del_dialog: false
@@ -108,6 +110,10 @@ export default {
         setTimeout(() => {
             this.show = true;
         }, 400);
+        if(window.localStorage.history ==  '[]' && window.localStorage.like == '[]'){
+            this.del_loading = false;
+            this.del_disabled = true;
+        }
     },
 
     methods: {
@@ -116,7 +122,6 @@ export default {
             window.localStorage.history =  '[]';
             window.localStorage.like = '[]';
             setTimeout(() => {
-                this.del_state = '已删除';
                 this.del_loading = false;
                 this.del_disabled = true;
                 setTimeout(() => {
