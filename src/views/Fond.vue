@@ -100,4 +100,10 @@ export default {
 .theme--light.v-card > .v-card__text, .theme--light.v-card .v-card__subtitle {
     color: #FFFFFF;
 }
+.expand-transition-enter-active, .expand-transition-leave-active {
+  transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+}
+.expand-transition-move {
+  transition: transform 0.6s;
+}
 </style>

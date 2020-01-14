@@ -166,4 +166,13 @@ input::-webkit-input-placeholder {
     display: flex;
     justify-content: center;
 }
+.fade-transition-enter-active, .fade-transition-leave-active {
+  transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+}
+.fade-transition-move {
+  transition: transform 0.6s;
+}
+.fade-transition-enter, .fade-transition-leave-to {
+  opacity: 0 !important;
+}
 </style>
