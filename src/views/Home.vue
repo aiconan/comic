@@ -44,6 +44,49 @@
                     </template>
                     <span>收藏</span>
                 </v-tooltip>
+                <v-dialog 
+                    v-model="del_dialog" 
+                    :persistent="!del_disabled" 
+                    max-width="300"
+                >
+                    <template v-slot:activator="{ on }">
+                        <v-btn 
+                            text
+                            icon
+                            v-on="on"
+                            absolute
+                            style="bottom: 10px"
+                        >
+                            <v-icon dark>delete</v-icon>
+                        </v-btn>
+                    </template>
+                    <v-card>
+                        <v-card-title class="headline">提示</v-card-title>
+                        <v-card-text>
+                            您确定要删除<strong>搜索历史</strong>与<strong>收藏</strong>吗？<br/>请注意，该操作是不可逆的。
+                        </v-card-text>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn 
+                                    text 
+                                    v-if="!del_disabled"
+                                    style="color: rgba(0, 0, 0, 0.6)"
+                                    @click="del_dialog = false"
+                                >
+                                    取消
+                                </v-btn>
+                                <v-btn 
+                                    text 
+                                    color="light-blue darken-1"
+                                    :loading="del_loading"
+                                    :disabled="del_disabled"
+                                    @click="del()"
+                                >
+                                    {{ del_state }}
+                                </v-btn>
+                            </v-card-actions>
+                    </v-card>
+                </v-dialog>
             </v-row>
         </div>
 	</div>
@@ -54,7 +97,11 @@ export default {
 	name: 'Home',
 
 	data: () => ({
-        show: false
+        show: false,
+        del_state: '确认',
+        del_loading: false,
+        del_disabled: false,
+        del_dialog: false
     }),
 
     mounted: function(){
@@ -64,6 +111,19 @@ export default {
     },
 
     methods: {
+        del: function(){
+            this.del_loading = true;
+            window.localStorage.history =  '[]';
+            window.localStorage.like = '[]';
+            setTimeout(() => {
+                this.del_state = '已删除';
+                this.del_loading = false;
+                this.del_disabled = true;
+                setTimeout(() => {
+                    this.del_dialog = false;
+                }, 100);
+            }, 600);
+        }
     }
 }
 </script>

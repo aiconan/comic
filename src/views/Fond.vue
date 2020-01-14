@@ -88,6 +88,9 @@ export default {
                 }
             });
             window.localStorage.like = window.JSON.stringify(_l);
+            if(window.localStorage.like == '[]'){
+                this.$router.push({path: `/home`});
+            }
         }
     }
 }
